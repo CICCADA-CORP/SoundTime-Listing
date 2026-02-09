@@ -143,7 +143,7 @@ app.post("/api/announce", async (req, res) => {
         version || info?.version || node.version || "",
         info?.track_count ?? node.track_count ?? 0,
         info?.user_count ?? node.user_count ?? 0,
-        info?.open_registration ?? node.open_registration ?? 1,
+        (info?.open_registration ?? node.open_registration ?? 1) ? 1 : 0,
         info?.p2p_enabled ? 1 : 0,
         info?.p2p_node_id || node.p2p_node_id || null,
         token
@@ -192,7 +192,7 @@ app.post("/api/announce", async (req, res) => {
       version || info?.version || "",
       info?.track_count ?? 0,
       info?.user_count ?? 0,
-      info?.open_registration ?? 1,
+      (info?.open_registration ?? 1) ? 1 : 0,
       info?.p2p_enabled ? 1 : 0,
       info?.p2p_node_id || null,
       newToken
@@ -340,7 +340,7 @@ async function runHealthChecks() {
         info?.p2p_enabled != null ? (info.p2p_enabled ? 1 : 0) : null,
         info?.p2p_node_id || null,
         info?.name || null,
-        info?.open_registration ?? null,
+        info?.open_registration != null ? (info.open_registration ? 1 : 0) : null,
         node.id
       );
 
