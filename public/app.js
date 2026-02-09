@@ -67,6 +67,18 @@ function renderNode(node) {
 
       <div class="node-tags">${tags.join("")}</div>
 
+      ${node.p2p_enabled && node.p2p_node_id ? `
+      <div class="node-peer-id">
+        <span class="peer-id-label">Peer ID</span>
+        <div class="peer-id-row">
+          <code class="peer-id-value" title="${escapeHtml(node.p2p_node_id)}">${escapeHtml(node.p2p_node_id)}</code>
+          <button class="copy-btn" onclick="copyPeerId(this, '${escapeHtml(node.p2p_node_id)}')" title="Copy Peer ID">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+      </div>
+      ` : ""}
+
       <div class="node-stats">
         <div class="node-stat"><strong>${formatNumber(node.track_count)}</strong> tracks</div>
         <div class="node-stat"><strong>${formatNumber(node.user_count)}</strong> users</div>
@@ -160,6 +172,18 @@ document.getElementById("search-input").addEventListener("input", renderNodes);
 document.getElementById("filter-open").addEventListener("change", renderNodes);
 document.getElementById("filter-p2p").addEventListener("change", renderNodes);
 document.getElementById("filter-offline").addEventListener("change", renderNodes);
+
+// ── Clipboard ────────────────────────────────────────────────────
+function copyPeerId(btn, peerId) {
+  navigator.clipboard.writeText(peerId).then(() => {
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      btn.classList.remove("copied");
+    }, 2000);
+  });
+}
 
 // ── Init ─────────────────────────────────────────────────────────
 loadStats();
